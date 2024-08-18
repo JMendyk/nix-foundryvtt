@@ -19,7 +19,7 @@ let
 
   inherit (flake.packages.${pkgs.stdenv.hostPlatform.system}) foundryvtt;
 
-  cfg = config.services.foundryvtt;
+  cfg = config.services.foundryvtt2;
   configFile = pkgs.writeText "options.json" (
     toJSON (
       pipe cfg [
@@ -43,21 +43,21 @@ in
     (mkRenamedOptionModule
       [
         "services"
-        "foundryvtt"
+        "foundryvtt2"
         "hostname"
       ]
       [
         "services"
-        "foundryvtt"
+        "foundryvtt2"
         "hostName"
       ]
     )
   ];
 
   options = {
-    services.foundryvtt = {
+    services.foundryvtt2 = {
       enable = mkEnableOption ''
-        Foundry Virtual Tabletop: A standalone application for online tabletop role-playing games.
+        Foundry Virtual Tabletop 2nd instance
       '';
 
       awsConfig = mkOption {
@@ -89,7 +89,7 @@ in
 
       dataDir = mkOption {
         type = types.str;
-        default = "/var/lib/foundryvtt";
+        default = "/var/lib/foundryvtt2";
         description = ''
           The path where Foundry keeps its config, data, and logs.
         '';
@@ -214,15 +214,15 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf cfg.enable {
-      users.users.foundryvtt = {
-        description = "Foundry VTT daemon user";
+      users.users.foundryvtt2 = {
+        description = "Foundry VTT 2nd daemon user";
         isSystemUser = true;
-        group = "foundryvtt";
+        group = "foundryvtt2";
       };
 
-      users.groups.foundryvtt = { };
+      users.groups.foundryvtt2 = { };
 
-      systemd.services.foundryvtt = {
+      systemd.services.foundryvtt2 = {
         description = "Foundry Virtual Tabletop";
         documentation = [ "https://foundryvtt.com/kb/" ];
 
@@ -231,11 +231,11 @@ in
         wantedBy = [ "multi-user.target" ];
 
         serviceConfig = {
-          User = "foundryvtt";
-          Group = "foundryvtt";
+          User = "foundryvtt2";
+          Group = "foundryvtt2";
           Restart = "always";
           ExecStart = "${lib.getBin cfg.package}/bin/foundryvtt --headless --noupdate --dataPath=\"${cfg.dataDir}\"";
-          StateDirectory = "foundryvtt";
+          StateDirectory = "foundryvtt2";
           StateDirectoryMode = "0750";
 
           # Hardening
@@ -288,13 +288,13 @@ in
         '';
       };
     })
-    (lib.mkIf (cfg.dataDir != "/var/lib/foundryvtt") {
-      systemd.services.foundryvtt.serviceConfig.ReadWritePaths = [ cfg.dataDir ];
+    (lib.mkIf (cfg.dataDir != "/var/lib/foundryvtt2") {
+      systemd.services.foundryvtt2.serviceConfig.ReadWritePaths = [ cfg.dataDir ];
       systemd.tmpfiles.settings = {
-        "10-foundryvtt"."${cfg.dataDir}".d = {
+        "10-foundryvtt2"."${cfg.dataDir}".d = {
           mode = "0750";
-          user = "foundryvtt";
-          group = "foundryvtt";
+          user = "foundryvtt2";
+          group = "foundryvtt2";
         };
       };
     })
