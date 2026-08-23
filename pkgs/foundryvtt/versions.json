@@ -481,7 +481,7 @@
   "14.365": {
     "hash": "sha256-HxPF1tfvBJBeZkgqQUpWFYELvjsQn4EeYMvPGLFC+wQ=",
     "npmDepsHash": "sha256-qfRENro/kflvbTLmZFTWtEceacO1BALyKA8tbjUvhpU=",
-    "releaseType": "release"
+    "releaseType": "stable"
   },
   "14.366": {
     "hash": "sha256-9Nmhs9gB5VgGlbS5L3N14MRINg20WfeH1pMmqOVMSaU=",
